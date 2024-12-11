@@ -4,7 +4,7 @@ const app = express();
 const port = 3001;
 
 app.get("/", (req, res) => {
-  res.send("bonjour Istamosh!");
+  return res.send("bonjour Istamosh!");
 });
 
 import registration from "./routes/registration.js";
