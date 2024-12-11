@@ -7,7 +7,7 @@ app.get("/", (req, res) => {
   res.send("bonjour Istamosh!");
 });
 
-import registration from "./routes/registration";
+import registration from "./routes/registration.js";
 
 app.use("/registration", registration);
 

@@ -1,5 +1,5 @@
 {
-  "watch": ["server.ts", "routes/*.ts"],
-  "ext": "ts",
-  "exec": "ts-node server.ts"
+  "watch": ["server.js", "routes/*.js"],
+  "ext": "js",
+  "exec": "node server.js"
 }
