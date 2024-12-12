@@ -1,5 +1,5 @@
 {
-  "watch": ["server.js", "routes/*.js"],
+  "watch": [".env", "server.js", "routes/*.js"],
   "ext": "js",
   "exec": "node server.js"
 }

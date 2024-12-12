@@ -3,7 +3,7 @@ import Joi from "joi";
 
 const router = express.Router();
 
-router.use(express.json(), logger);
+router.use(logger);
 
 const payload = {
   status: 102,
@@ -12,12 +12,14 @@ const payload = {
 };
 
 router.post("/", validator, (req, res) => {
-  return res.send({
-    email: email,
-    first_name: first_name,
-    last_name: last_name,
-    password: password,
+  // process into the db
+
+  res.status(200).send({
+    ...payload,
+    status: 0,
+    message: "Registration was successful, please login",
   });
+  return;
 });
 
 function logger(req, res, next) {
@@ -45,8 +47,13 @@ function validator(req, res, next) {
     password: Joi.string().min(8).max(20).required(),
   });
 
-  const result = schema.validate(req.body);
-  console.log(result);
+  const { error } = schema.validate(req.body);
+  if (error) {
+    res.status(400).send({ ...payload, message: error.details[0].message });
+    return;
+  }
+
+  // test the value against existing db entry
   next();
 }
 
