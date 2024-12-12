@@ -11,6 +11,11 @@ const payload = {
   data: null,
 };
 
+router.get("/:customerId", (req, res) => {
+  res.send({ ...payload, message: `customer ID: ${req.params.customerId}` });
+  return;
+});
+
 router.post("/", validator, (req, res) => {
   // process into the db
 

@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
   return res.send("bonjour Istamosh!");
 });
 
-import registration from "./routes/registration.js";
+import registration from "./routes/membership/registration.js";
 
 app.use("/registration", registration);
 
