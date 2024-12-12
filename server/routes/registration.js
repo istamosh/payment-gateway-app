@@ -1,5 +1,6 @@
 import express from "express";
-import { body, validationResult } from "express-validator";
+import Joi from "joi";
+
 const router = express.Router();
 
 router.use(express.json(), logger);
@@ -26,28 +27,26 @@ function logger(req, res, next) {
 
 function validator(req, res, next) {
   if (!req.is("application/json")) {
-    return res.status(400).send({
+    res.status(400).send({
       ...payload,
-      message: "Invalid request body, you should use application/json",
+      message: "Invalid request body, you should use json",
     });
+    return;
   }
 
-  const { email, first_name, last_name, password } = req.body;
+  const namePattern = Joi.string()
+    .pattern(new RegExp(/^[a-zA-Z]+( [a-zA-Z])?$/))
+    .max(50)
+    .required();
+  const schema = Joi.object({
+    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    first_name: namePattern,
+    last_name: namePattern,
+    password: Joi.string().min(8).max(20).required(),
+  });
 
-  const requiredFields = { email, first_name, last_name, password };
-  for (const [key, value] of Object.entries(requiredFields)) {
-    if (value === undefined) {
-      return res
-        .status(400)
-        .send({ ...payload, message: `${key} field is missing from request` });
-    }
-    if (value === "") {
-      return res
-        .status(400)
-        .send({ ...payload, message: `${key} field is empty` });
-    }
-  }
-
+  const result = schema.validate(req.body);
+  console.log(result);
   next();
 }
 
