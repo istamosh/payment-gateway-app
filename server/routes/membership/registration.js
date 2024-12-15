@@ -1,9 +1,9 @@
-import express from "express";
-import Joi from "joi";
+const express = require('express')
+const Joi = require('joi')
 
 const router = express.Router();
 
-router.use(logger);
+router.use(express.json(), logger);
 
 const payload = {
   status: 102,
@@ -12,14 +12,14 @@ const payload = {
 };
 
 router.get("/:customerId", (req, res) => {
-  res.send({ ...payload, message: `customer ID: ${req.params.customerId}` });
+  res.status(200).json({ ...payload, message: `customer ID: ${req.params.customerId}` });
   return;
 });
 
 router.post("/", validator, (req, res) => {
   // process into the db
 
-  res.status(200).send({
+  res.status(200).json({
     ...payload,
     status: 0,
     message: "Registration was successful, please login",
@@ -34,7 +34,7 @@ function logger(req, res, next) {
 
 function validator(req, res, next) {
   if (!req.is("application/json")) {
-    res.status(400).send({
+    res.status(400).json({
       ...payload,
       message: "Invalid request body, you should use json",
     });
@@ -54,7 +54,7 @@ function validator(req, res, next) {
 
   const { error } = schema.validate(req.body);
   if (error) {
-    res.status(400).send({ ...payload, message: error.details[0].message });
+    res.status(400).json({ ...payload, message: error.details[0].message });
     return;
   }
 
@@ -62,4 +62,4 @@ function validator(req, res, next) {
   next();
 }
 
-export default router;
+module.exports = router;
