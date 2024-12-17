@@ -1,9 +1,23 @@
 const express = require("express");
-const query = require("./mysql");
+const pool = require("./mysql");
+require("dotenv").config();
 
-query("SELECT 1 + 1 AS solution", (res) => {
-  console.log(res.results[0].solution);
-});
+try {
+  pool.getConnection((err, connection) => {
+    if (err) throw err;
+    connection.query(
+      "CREATE TABLE IF NOT EXISTS ??.?? (id INT AUTO_INCREMENT PRIMARY KEY, data JSON NOT NULL)",
+      [process.env.DATABASE, "payment_gateway_app"],
+      (error, results, fields) => {
+        connection.destroy();
+        console.log("Pooling success.");
+        if (error) throw error;
+      }
+    );
+  });
+} catch (error) {
+  console.error(error);
+}
 
 const app = express();
 const port = 3001;
