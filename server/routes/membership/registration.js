@@ -1,5 +1,7 @@
-const express = require('express')
-const Joi = require('joi')
+const express = require("express");
+const Joi = require("joi");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const router = express.Router();
 
@@ -12,12 +14,15 @@ const payload = {
 };
 
 router.get("/:customerId", (req, res) => {
-  res.status(200).json({ ...payload, message: `customer ID: ${req.params.customerId}` });
+  res
+    .status(200)
+    .json({ ...payload, message: `customer ID: ${req.params.customerId}` });
   return;
 });
 
-router.post("/", validator, (req, res) => {
-  // process into the db
+router.post("/", validator, async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+  const userData = { ...req.body, password: hashedPassword };
 
   res.status(200).json({
     ...payload,
@@ -30,6 +35,13 @@ router.post("/", validator, (req, res) => {
 function logger(req, res, next) {
   console.log(`/registration was accessed`);
   next();
+}
+
+async function hasher(password) {
+  const hashed = await bcrypt.hash(password, saltRounds);
+  const match = await bcrypt.compare(password, hashed);
+
+  console.log(match);
 }
 
 function validator(req, res, next) {

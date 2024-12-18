@@ -18,7 +18,7 @@ const checkTable = () => {
         [process.env.DATABASE, "payment_gateway_app"],
         (error, results, fields) => {
           connection.release();
-          console.log("Connection released.");
+          console.log("Database created/already exists, connection released.");
           if (error) throw error;
         }
       );
@@ -26,6 +26,22 @@ const checkTable = () => {
       console.error(error);
     }
   });
+};
+
+const get = () => {
+  return;
+};
+
+const post = () => {
+  return;
+};
+
+const put = () => {
+  return;
+};
+
+const remove = () => {
+  return;
 };
 
 module.exports = { pool, checkTable };
